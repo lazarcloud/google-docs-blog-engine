@@ -1,4 +1,4 @@
-package docs_blog_engine_run
+package run
 
 func Build() error {
 	return runCommand("./app/", "npm", "run", "build")

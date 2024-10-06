@@ -1,4 +1,4 @@
-package docs_blog_engine_run
+package run
 
 import (
 	"bufio"

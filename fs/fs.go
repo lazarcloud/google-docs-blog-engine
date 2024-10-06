@@ -1,4 +1,4 @@
-package docs_blog_engine
+package files
 
 import (
 	"io"
@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func ensureFoldersExist(folders []string) error {
+func EnsureFoldersExist(folders []string) error {
 	for _, folder := range folders {
 		err := os.MkdirAll(folder, 0755)
 		if err != nil {
@@ -16,7 +16,7 @@ func ensureFoldersExist(folders []string) error {
 	return nil
 }
 
-func clearDirectories(folders []string) error {
+func ClearDirectories(folders []string) error {
 	for _, folder := range folders {
 		if err := os.RemoveAll(folder); err != nil {
 			return err
@@ -28,28 +28,24 @@ func clearDirectories(folders []string) error {
 	return nil
 }
 
-func copyFile(src, dst string) error {
-	// Open the source file
+func CopyFile(src, dst string) error {
 	sourceFile, err := os.Open(src)
 	if err != nil {
 		return err
 	}
 	defer sourceFile.Close()
 
-	// Create the destination file
 	destFile, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
 	defer destFile.Close()
 
-	// Copy the file contents
 	_, err = io.Copy(destFile, sourceFile)
 	if err != nil {
 		return err
 	}
 
-	// Preserve file permissions
 	info, err := os.Stat(src)
 	if err != nil {
 		return err
@@ -57,40 +53,33 @@ func copyFile(src, dst string) error {
 	return os.Chmod(dst, info.Mode())
 }
 
-// copyDir recursively copies a directory tree, attempting to preserve permissions.
-func copyDir(src, dst string) error {
-	// Get properties of source directory
+func CopyDir(src, dst string) error {
 	srcInfo, err := os.Stat(src)
 	if err != nil {
 		return err
 	}
 
-	// Create the destination directory
 	err = os.MkdirAll(dst, srcInfo.Mode())
 	if err != nil {
 		return err
 	}
 
-	// Read the directory contents
 	entries, err := os.ReadDir(src)
 	if err != nil {
 		return err
 	}
 
-	// Loop through directory contents
 	for _, entry := range entries {
 		srcPath := filepath.Join(src, entry.Name())
 		dstPath := filepath.Join(dst, entry.Name())
 
-		// If it's a directory, recursively copy
 		if entry.IsDir() {
-			err := copyDir(srcPath, dstPath)
+			err := CopyDir(srcPath, dstPath)
 			if err != nil {
 				return err
 			}
 		} else {
-			// Copy file
-			err := copyFile(srcPath, dstPath)
+			err := CopyFile(srcPath, dstPath)
 			if err != nil {
 				return err
 			}
