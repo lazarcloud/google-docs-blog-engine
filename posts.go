@@ -202,7 +202,7 @@ heroImage: '/images/%s-placeholder.jpg'
 
 	}
 	posts = newPosts
-	err = build()
+	err = Build()
 	if err != nil {
 		return err
 	}
