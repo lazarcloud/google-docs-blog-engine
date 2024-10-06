@@ -7,12 +7,13 @@ import (
 
 	notrhttp "github.com/Notr-Dev/notr-http"
 	notrhttp_middlewares "github.com/Notr-Dev/notr-http/middlewares"
+	files "github.com/lazarcloud/google-docs-blog-engine/fs"
 	"github.com/lazarcloud/google-docs-blog-engine/posts"
 	"github.com/lazarcloud/google-docs-blog-engine/run"
 )
 
 func RunServer() error {
-	err := ensureFoldersExist([]string{"./files", "./web"})
+	err := files.EnsureFoldersExist([]string{"./files", "./web"})
 	if err != nil {
 		return err
 	}
