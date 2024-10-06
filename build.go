@@ -19,21 +19,12 @@ func build() error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	// create a buffer to read the command output
-	buf := make([]byte, 1024)
-	for {
-		// read the command output
-		n, err := stdout.Read(buf)
-		if n > 0 {
-			fmt.Print(string(buf[:n]))
-		}
-		if err != nil {
-			break
-		}
-	}
-	// wait for the command to finish
+	// read the standard output of the command
+	fmt.Println("Building the app...")
 	if err := cmd.Wait(); err != nil {
 		return err
 	}
+	fmt.Println(stdout)
+	fmt.Println("Build completed successfully.")
 	return nil
 }
