@@ -10,6 +10,7 @@ import (
 
 	notrhttp "github.com/Notr-Dev/notr-http"
 	notrhttp_middlewares "github.com/Notr-Dev/notr-http/middlewares"
+	docs_blog_engine_run "github.com/lazarcloud/google-docs-blog-engine/run"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/drive/v2"
 	"google.golang.org/api/option"
@@ -80,7 +81,7 @@ func RunServer() error {
 
 	fmt.Println("Managed to write credentials")
 
-	err = Install()
+	err = docs_blog_engine_run.Install()
 	if err != nil {
 		return err
 	}
@@ -96,7 +97,7 @@ func RunServer() error {
 	if err != nil {
 		return err
 	}
-	// check if the web folder exists and has an index.html in it
+
 	_, err = os.Stat("./web/index.html")
 	if err != nil {
 
