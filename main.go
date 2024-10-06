@@ -103,6 +103,10 @@ func RunServer() error {
 	if err != nil {
 		return err
 	}
+	err = os.MkdirAll("./web", os.ModePerm)
+	if err != nil {
+		return err
+	}
 	// write to credentials.json the env variable GOOGLE_CREDENTIALS
 	err = os.WriteFile("./files/credentials.json", []byte(os.Getenv("GOOGLE_CREDENTIALS")), os.ModePerm)
 	if err != nil {
