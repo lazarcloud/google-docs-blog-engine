@@ -64,6 +64,9 @@ heroImage: '/images/%s-placeholder.jpg'
 ---
 `, file.Title, description, formattedDate, postID)
 
+		md = strings.ReplaceAll(md, "\\#", "#")
+		md = strings.ReplaceAll(md, "\\.", ".")
+
 		path := "./app/src/content/blog"
 		filePath := filepath.Join(path, postID+".mdx")
 		err = os.WriteFile(filePath, []byte(toAppend+md), 0644)
