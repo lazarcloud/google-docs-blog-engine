@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func build() error {
+func Build() error {
 	// define the command that you want to run
 	cmd := exec.Command("npm", "run", "build")
 	// specify the working directory of the command
