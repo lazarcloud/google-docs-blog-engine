@@ -55,7 +55,7 @@ func Build() error {
 
 func Install() error {
 	// define the command that you want to run
-	cmd := exec.Command("npm", "run", "install")
+	cmd := exec.Command("npm", "install")
 	// specify the working directory of the command
 	cmd.Dir = "./app/"
 	// get the pipe for the standard output of the command
