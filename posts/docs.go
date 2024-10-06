@@ -42,12 +42,12 @@ func getDoc(docID string, format string) (string, error) {
 	return content, nil
 }
 
-func getHTMLandMD(docID string) (string, string, error) {
-	html, err := getDoc(docID, "html")
+func getHTMLandMD(docID string) (html string, md string, err error) {
+	html, err = getDoc(docID, "html")
 	if err != nil {
 		return "", "", err
 	}
-	md, err := getDoc(docID, "md")
+	md, err = getDoc(docID, "md")
 	if err != nil {
 		return "", "", err
 	}
@@ -103,7 +103,7 @@ func removeFirstImage(md string) string {
 func getDescription(input string) (md string, description string) {
 	firstLine := strings.Split(input, "\n")[0]
 	if !strings.HasPrefix(firstLine, globals.DescriptionKeyword) {
-		return md, globals.DefaultDescription
+		return input, globals.DefaultDescription
 	}
 	firstLine = strings.TrimPrefix(firstLine, globals.DescriptionKeyword)
 	md = strings.Join(strings.Split(md, "\n")[1:], "\n")
