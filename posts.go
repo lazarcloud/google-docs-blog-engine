@@ -208,19 +208,105 @@ heroImage: '/images/%s-placeholder.jpg'
 	}
 	// copy the ./app/dist to ./web
 	newDir := "./app/dist"
-	oldDir := "./web"
-	if err := updateFiles(newDir, oldDir); err != nil {
+	err = CopyDir(newDir, "./web2")
+	if err != nil {
 		return err
 	}
 
-	// Delete old files not present in newDir
-	if err := deleteOldFiles(newDir, oldDir); err != nil {
+	err = os.Rename("./web", "./web3")
+	if err != nil {
 		return err
 	}
+
+	err = os.Rename("./web2", "./web")
+	if err != nil {
+		return err
+	}
+
+	err = os.RemoveAll("./web3")
+	if err != nil {
+		return err
+	}
+
 	lastChanged = newestModified
 
 	// write it to files
 	err = os.WriteFile("./files/lastmodified.txt", []byte(lastChanged), 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func CopyFile(src, dst string) error {
+	// Open the source file
+	sourceFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	// Create the destination file
+	destFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	// Copy the file contents
+	_, err = io.Copy(destFile, sourceFile)
+	if err != nil {
+		return err
+	}
+
+	// Preserve file permissions
+	info, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+	return os.Chmod(dst, info.Mode())
+}
+
+// CopyDir recursively copies a directory tree, attempting to preserve permissions.
+func CopyDir(src, dst string) error {
+	// Get properties of source directory
+	srcInfo, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	// Create the destination directory
+	err = os.MkdirAll(dst, srcInfo.Mode())
+	if err != nil {
+		return err
+	}
+
+	// Read the directory contents
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+
+	// Loop through directory contents
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		dstPath := filepath.Join(dst, entry.Name())
+
+		// If it's a directory, recursively copy
+		if entry.IsDir() {
+			err := CopyDir(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		} else {
+			// Copy file
+			err := CopyFile(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -346,8 +432,8 @@ func removeFirstImage(md string) string {
 	if start == -1 {
 		return md
 	}
-	end := strings.Index(md[start:], "\n") + start
-	md = md[:start] + md[end+1:]
+	end := start + len("![][image1]")
+	md = md[:start] + md[end:]
 
 	// remove [image1]: url
 	start = strings.Index(md, "[image1]:")
