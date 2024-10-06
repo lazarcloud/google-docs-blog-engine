@@ -121,6 +121,11 @@ func RunServer() error {
 
 	fmt.Println("Written creds")
 
+	err = Install()
+	if err != nil {
+		return err
+	}
+
 	// time.Sleep(time.Second * 100)
 
 	server := notrhttp.NewServer(
