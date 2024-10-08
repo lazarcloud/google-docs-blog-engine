@@ -5,7 +5,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
+	"github.com/lazarcloud/google-docs-blog-engine/backup"
 	files "github.com/lazarcloud/google-docs-blog-engine/fs"
 	"github.com/lazarcloud/google-docs-blog-engine/globals"
 	docs_blog_engine_run "github.com/lazarcloud/google-docs-blog-engine/run"
@@ -30,6 +32,17 @@ func GetPosts() error {
 	}
 
 	fmt.Println("Changes detected in the folder")
+
+	time.Sleep(120 * time.Second)
+
+	secondModified, fileList, err := getLastModified()
+	if err != nil {
+		return err
+	}
+
+	if secondModified != newestModified {
+		return nil
+	}
 
 	err = files.ClearDirectories([]string{"./app/src/content/blog", "./app/public/images"})
 	if err != nil {
@@ -102,11 +115,12 @@ heroImage: '/images/%s-placeholder.jpg'
 		return err
 	}
 
-	lastChanged = newestModified
-
-	err = os.WriteFile("./files/lastmodified.txt", []byte(lastChanged), 0644)
+	err = backup.CreateBackup()
 	if err != nil {
 		return err
 	}
+
+	lastChanged = newestModified
+
 	return nil
 }

@@ -1,34 +1,21 @@
 package docs_blog_engine
 
 import (
-	"fmt"
-	"os"
 	"time"
 
 	notrhttp "github.com/Notr-Dev/notr-http"
 	notrhttp_middlewares "github.com/Notr-Dev/notr-http/middlewares"
 	files "github.com/lazarcloud/google-docs-blog-engine/fs"
+	"github.com/lazarcloud/google-docs-blog-engine/globals"
 	"github.com/lazarcloud/google-docs-blog-engine/posts"
 	"github.com/lazarcloud/google-docs-blog-engine/run"
 )
 
 func RunServer() error {
-	err := files.EnsureFoldersExist([]string{"./files", "./web"})
+	err := files.EnsureFoldersExist([]string{"./web"})
 	if err != nil {
 		return err
 	}
-
-	err = os.WriteFile("./files/credentials.json", []byte(os.Getenv("GOOGLE_CREDENTIALS")), os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile("./files/folder.txt", []byte(os.Getenv("GOOGLE_FOLDER_ID")), os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("Managed to write credentials")
 
 	err = run.Install()
 	if err != nil {
@@ -47,16 +34,12 @@ func RunServer() error {
 		return err
 	}
 
-	_, err = os.Stat("./web/index.html")
+	err = posts.GetPosts()
 	if err != nil {
-
-		err = posts.GetPosts()
-		if err != nil {
-			return err
-		}
+		return err
 	}
 
-	server.ServeStaticWebsite("/", "./web")
+	server.ServeStaticWebsite("/", globals.StaticDir)
 
 	server.RegisterMiddleware(notrhttp_middlewares.AllowALlOrigins)
 

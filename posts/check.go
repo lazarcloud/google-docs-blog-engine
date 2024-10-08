@@ -17,20 +17,6 @@ var folderID []byte
 var lastChanged = ""
 
 func CheckIfConfigured() error {
-	_, err := os.Stat("./files/lastmodified.txt")
-	if err != nil {
-		_, err = os.Create("./files/lastmodified.txt")
-		if err != nil {
-			return err
-		}
-		lastChanged = ""
-	} else {
-		file, err := os.ReadFile("./files/lastmodified.txt")
-		if err != nil {
-			return err
-		}
-		lastChanged = string(file)
-	}
 	ctx := context.Background()
 	if os.Getenv("GOOGLE_CREDENTIALS") == "" {
 		return fmt.Errorf("GOOGLE_CREDENTIALS env variable is not set")
