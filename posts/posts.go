@@ -35,12 +35,12 @@ func GetPosts() error {
 
 	time.Sleep(120 * time.Second)
 
-	newestModified2, fileList, err := getLastModified()
+	secondModified, fileList, err := getLastModified()
 	if err != nil {
 		return err
 	}
 
-	if newestModified2 != newestModified {
+	if secondModified != newestModified {
 		return nil
 	}
 
