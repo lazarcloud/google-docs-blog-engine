@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/lazarcloud/google-docs-blog-engine/backup"
 	files "github.com/lazarcloud/google-docs-blog-engine/fs"
 	"github.com/lazarcloud/google-docs-blog-engine/globals"
 	docs_blog_engine_run "github.com/lazarcloud/google-docs-blog-engine/run"
@@ -102,16 +103,12 @@ heroImage: '/images/%s-placeholder.jpg'
 		return err
 	}
 
-	err := backup.CreateBackup()
+	err = backup.CreateBackup()
 	if err != nil {
 		return err
 	}
 
 	lastChanged = newestModified
 
-	err = os.WriteFile("./files/lastmodified.txt", []byte(lastChanged), 0644)
-	if err != nil {
-		return err
-	}
 	return nil
 }
