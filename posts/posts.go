@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/lazarcloud/google-docs-blog-engine/backup"
 	files "github.com/lazarcloud/google-docs-blog-engine/fs"
@@ -31,6 +32,17 @@ func GetPosts() error {
 	}
 
 	fmt.Println("Changes detected in the folder")
+
+	time.Sleep(120 * time.Second)
+
+	newestModified2, fileList, err := getLastModified()
+	if err != nil {
+		return err
+	}
+
+	if newestModified2 != newestModified {
+		return nil
+	}
 
 	err = files.ClearDirectories([]string{"./app/src/content/blog", "./app/public/images"})
 	if err != nil {
