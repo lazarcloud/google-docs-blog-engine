@@ -106,7 +106,7 @@ func getDescription(input string) (md string, description string) {
 		return input, globals.DefaultDescription
 	}
 	firstLine = strings.TrimPrefix(firstLine, globals.DescriptionKeyword)
-	md = strings.Join(strings.Split(md, "\n")[1:], "\n")
+	md = strings.Join(strings.Split(input, "\n")[1:], "\n")
 	return md, firstLine
 }
 
