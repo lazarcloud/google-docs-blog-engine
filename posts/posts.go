@@ -102,6 +102,11 @@ heroImage: '/images/%s-placeholder.jpg'
 		return err
 	}
 
+	err := backup.CreateBackup()
+	if err != nil {
+		return err
+	}
+
 	lastChanged = newestModified
 
 	err = os.WriteFile("./files/lastmodified.txt", []byte(lastChanged), 0644)

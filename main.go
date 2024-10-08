@@ -47,13 +47,9 @@ func RunServer() error {
 		return err
 	}
 
-	_, err = os.Stat("./web/index.html")
+	err = posts.GetPosts()
 	if err != nil {
-
-		err = posts.GetPosts()
-		if err != nil {
-			return err
-		}
+		return err
 	}
 
 	server.ServeStaticWebsite("/", "./web")

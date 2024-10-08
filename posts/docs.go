@@ -68,7 +68,6 @@ func saveFile(filePath string, src io.Reader) error {
 }
 
 func downloadFileLocally(filePath string, url string) error {
-	// download the file
 	resp, err := http.Get(url)
 	if err != nil {
 		return err

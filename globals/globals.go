@@ -7,6 +7,7 @@ var (
 	DefaultImagePath   = "./app/public/blog-placeholder-about.jpg"
 	BuildDir           = "./app/dist"
 	StaticDir          = "./web"
+	BackupDir = "./backup"
 )
 
 func init() {
