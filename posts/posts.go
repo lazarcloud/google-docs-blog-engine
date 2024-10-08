@@ -20,7 +20,7 @@ type Post struct {
 	ContentMD string `json:"content_md"`
 }
 
-func GetPosts() error {
+func GetPosts(toWait time.Duration) error {
 	newestModified, fileList, err := getLastModified()
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func GetPosts() error {
 
 	fmt.Println("Changes detected in the folder")
 
-	time.Sleep(120 * time.Second)
+	time.Sleep(toWait)
 
 	secondModified, fileList, err := getLastModified()
 	if err != nil {

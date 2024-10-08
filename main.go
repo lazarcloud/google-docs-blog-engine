@@ -34,7 +34,7 @@ func RunServer() error {
 		return err
 	}
 
-	err = posts.GetPosts()
+	err = posts.GetPosts(0 * time.Second)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func RunServer() error {
 		Name:     "Get Posts",
 		Interval: time.Second * 30,
 		Job: func() error {
-			posts.GetPosts()
+			posts.GetPosts(120 * time.Second)
 			return nil
 		},
 	})
