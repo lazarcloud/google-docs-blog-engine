@@ -51,6 +51,15 @@ func getHTMLandMD(docID string) (html string, md string, err error) {
 	if err != nil {
 		return "", "", err
 	}
+	err = os.WriteFile("./output.html", []byte(html), 0644)
+	if err != nil {
+		return "", "", err
+	}
+
+	err = os.WriteFile("./output.md", []byte(md), 0644)
+	if err != nil {
+		return "", "", err
+	}
 	return html, md, nil
 }
 
