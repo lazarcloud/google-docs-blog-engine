@@ -79,6 +79,7 @@ heroImage: '/images/%s-placeholder.jpg'
 
 		md = strings.ReplaceAll(md, "\\#", "#")
 		md = strings.ReplaceAll(md, "\\.", ".")
+		md = strings.ReplaceAll(md, "\\`", "`")
 
 		path := "./app/src/content/blog"
 		filePath := filepath.Join(path, postID+".mdx")
