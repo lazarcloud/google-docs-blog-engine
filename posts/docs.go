@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -48,15 +49,6 @@ func getHTMLandMD(docID string) (html string, md string, err error) {
 		return "", "", err
 	}
 	md, err = getDoc(docID, "md")
-	if err != nil {
-		return "", "", err
-	}
-	err = os.WriteFile("./output.html", []byte(html), 0644)
-	if err != nil {
-		return "", "", err
-	}
-
-	err = os.WriteFile("./output.md", []byte(md), 0644)
 	if err != nil {
 		return "", "", err
 	}
@@ -174,4 +166,24 @@ func formatDate(input string) (string, error) {
 
 	formattedDate := parsedDate.Format("02 Jan 2006")
 	return formattedDate, nil
+}
+
+func fixImages(mdContent string, html string) (string, error) {
+	mdPattern := `\[image\d+\]:\s*<[^>]+>`
+	mdRegex := regexp.MustCompile(mdPattern)
+	mdMatches := mdRegex.FindAllString(mdContent, -1)
+
+	htmlPattern := `<img\s+[^>]*src="([^"]*)"`
+	htmlRegex := regexp.MustCompile(htmlPattern)
+	htmlMatches := htmlRegex.FindAllStringSubmatch(html, -1)
+
+	for i, match := range mdMatches {
+		if i < len(htmlMatches) {
+			imageReference := fmt.Sprintf("[image%d]: %s", i+1, htmlMatches[i][1])
+			mdContent = strings.Replace(mdContent, match, imageReference, 1)
+		}
+	}
+
+	return mdContent, nil
+
 }

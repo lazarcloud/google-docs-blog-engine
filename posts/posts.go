@@ -60,14 +60,23 @@ func GetPosts(toWait time.Duration) error {
 
 		md, description := getDescription(md)
 
-		md = removeFirstImage(md)
-
 		formattedDate, err := formatDate(file.CreatedDate)
 		if err != nil {
 			return err
 		}
 
 		postImage := postID + "-placeholder.jpg"
+
+		md, err = fixImages(md, html)
+		if err != nil {
+			return err
+		}
+
+		err = savePicture(postImage, html)
+		if err != nil {
+			return err
+		}
+		md = removeFirstImage(md)
 
 		toAppend := fmt.Sprintf(`---
 title: '%s'
@@ -87,8 +96,6 @@ heroImage: '/images/%s-placeholder.jpg'
 		if err != nil {
 			return err
 		}
-
-		err = savePicture(postImage, html)
 
 	}
 	err = docs_blog_engine_run.Build()
